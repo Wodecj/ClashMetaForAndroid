@@ -1,3 +1,4 @@
+// Modified by Wodecj, 2026-10-31: wallpaper-aware proxy surfaces.
 package com.github.kr328.clash.design.component
 
 import android.view.View
