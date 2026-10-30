@@ -1,0 +1,41 @@
+# Added by Wodecj, 2026-10-30: publish the already validated, immutable build.
+name: Publish verified Themes preview
+on:
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: Wodecj/ClashMetaForAndroid
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Download successful immutable build
+        run: |
+          test "$(gh run view 41005280391 --json conclusion --jq .conclusion)" = success
+          gh run download 41005280391 -n ClashMeta-Themes-Android -D dist
+          test "$(head -1 dist/SOURCE_COMMIT.txt)" = 6a814f19f2ddec4082735660b97ef3b968443cdf
+      - name: Verify all APK signatures and checksums
+        run: |
+          cd dist
+          sha256sum -c SHA256SUMS.txt
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)
+          test -n "$APKSIGNER"
+          for apk in *.apk; do
+            "$APKSIGNER" verify --verbose --print-certs "$apk" > "$apk.signature.txt"
+            grep -Fi '8044c9ae5e26454f9566beee3549d6dfa0f2dd40c216f7cd68f1d936c41b39af' "$apk.signature.txt"
+          done
+      - name: Publish preview with complete source and notices
+        run: |
+          gh release create v2.11.36-themes.1 --prerelease \
+            --target 6a814f19f2ddec4082735660b97ef3b968443cdf \
+            --title 'Clash Meta Themes Android 预览版 1' \
+            --notes-file .github/preview-notes.md dist/*
