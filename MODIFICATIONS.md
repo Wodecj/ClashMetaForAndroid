@@ -31,3 +31,17 @@ Existing upstream network and VPN behavior is described in PRIVACY_POLICY.md.
 - Migrates old Soft/Balanced/Strong preferences to 70/85/95%; clamps saved percentages to 0–100.
 - 0% applies no overlay; 100% fully covers the background. Cards and toolbars retain their own surfaces.
 - Version name 2.11.36-themes.2, version code 211038, same application ID and private signing certificate for in-place upgrades.
+
+## Version 3 — 2026-10-30
+
+- Added asynchronous startup checks against this repository's GitHub Latest release API.
+- Compares version numbers numerically, ignores drafts/previews/older versions and releases without a compatible APK.
+- Prompts with release notes and download / remind tomorrow / skip this version actions.
+- Chooses the device ABI APK with universal fallback; only accepts HTTPS download URLs belonging to this repository.
+- Uses a one-minute in-process request cooldown, a per-session prompt limit, and five-second connect/read timeouts.
+- Adds unit tests for release parsing, numerical ordering, ABI fallback and rejected downloads. No FlyClash/Diodos code was copied.
+- Version name 2.11.36-themes.3, code 211039, same package and signing certificate.
+
+Privacy addition: opening the main screen contacts api.github.com to check the public latest release.
+No token, subscription contents or proxy configuration are sent. GitHub receives normal connection metadata (IP address and app User-Agent).
+Downloading is initiated only after the user selects Download update and opens in the system browser.

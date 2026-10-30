@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Added by Wodecj, 2026-10-30. GPL-3.0-or-later. -->
+<resources>
+    <string name="update_available">Update available: %1$s</string>
+    <string name="update_message">Installed: %1$s\n\n%2$s</string>
+    <string name="update_no_notes">A new version is available.</string>
+    <string name="update_download">Download update</string>
+    <string name="update_later">Remind me tomorrow</string>
+    <string name="update_ignore">Skip this version</string>
+    <string name="update_no_browser">No browser is available to open the download.</string>
+</resources>

@@ -49,7 +49,7 @@ jobs:
           printf '%s' "$KEYSTORE" | base64 --decode > private-release.jks
           printf 'keystore.path=private-release.jks\nkeystore.password=%s\nkey.alias=themes\nkey.password=%s\n' "$PASSWORD" "$PASSWORD" > signing.properties
       - name: Build and lint
-        run: ./gradlew --no-daemon :app:assembleMetaRelease :app:lintMetaRelease
+        run: ./gradlew --no-daemon :app:testMetaReleaseUnitTest :app:assembleMetaRelease :app:lintMetaRelease
       - name: Prepare download and complete corresponding source
         run: |
           mkdir -p dist

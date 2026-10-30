@@ -1,3 +1,4 @@
+// Modified by Wodecj, 2026-10-30: check for release updates when opening the main screen.
 package com.github.kr328.clash
 
 import android.content.Intent
@@ -23,6 +24,10 @@ import com.github.kr328.clash.util.withClash
 import com.github.kr328.clash.util.withProfile
 import com.github.kr328.clash.core.bridge.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import com.github.kr328.clash.update.AppUpdatePrompt
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
@@ -30,6 +35,24 @@ import java.util.concurrent.TimeUnit
 import com.github.kr328.clash.design.R as DesignR
 
 class MainActivity : BaseActivity<MainDesign>() {
+    private val updatePrompt by lazy { AppUpdatePrompt(this) }
+    private var updateJob: Job? = null
+
+    override fun onResume() {
+        super.onResume()
+        updateJob?.cancel()
+        updateJob = launch {
+            delay(1500)
+            updatePrompt.checkAndShow()
+        }
+    }
+
+    override fun onStop() {
+        updateJob?.cancel()
+        updatePrompt.dismiss()
+        super.onStop()
+    }
+
     override suspend fun main() {
         val design = MainDesign(this)
 

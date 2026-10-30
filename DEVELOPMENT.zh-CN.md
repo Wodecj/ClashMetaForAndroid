@@ -141,7 +141,7 @@ Artifacts 默认保存 30 天，下载通常要求 GitHub 登录；给普通用�
 真机验收完成后执行；tag 必须指向构建时的 SOURCE_COMMIT.txt 提交：
 
 ```powershell
-gh release create v2.11.36-themes.2 --target <构建提交SHA> --title 'Clash Meta Themes 1' --notes-file MODIFICATIONS.md dist\*.apk dist\corresponding-source.tar.gz dist\LICENSE dist\NOTICE dist\SHA256SUMS.txt dist\SOURCE_COMMIT.txt
+gh release create v2.11.36-themes.3 --target <构建提交SHA> --title 'Clash Meta Themes 1' --notes-file MODIFICATIONS.md dist\*.apk dist\corresponding-source.tar.gz dist\LICENSE dist\NOTICE dist\SHA256SUMS.txt dist\SOURCE_COMMIT.txt
 ```
 
 确认仓库为公开后，分享 Releases 页：https://github.com/Wodecj/ClashMetaForAndroid/releases 。
@@ -172,3 +172,19 @@ GitHub 自动生成的 Source code.zip 不含子模块，不能代替本流程�
 - 安装首版，再用相同签名、更大 versionCode 覆盖升级。
 
 未连接手机或模拟器时，编译与 lint 通过不等于已完成上述运行时验收。
+
+## 10. 启动更新检查
+
+从 themes.3 起，打开主界面约 1.5 秒后异步请求本仓库的 GitHub Releases Latest API。
+仅提示更高版本的正式 Release，忽略草稿、预发布、旧版本以及没有适配 APK 的发布。
+同一进程最多每分钟请求一次、同一版本每次进程启动最多弹一次；断网、超时、GitHub 限流时静默失败，不阻止代理功能。
+“明天提醒”延后该版本 24 小时，“忽略此版本”不再提示该版本，之后的新版本仍可提示。
+“下载更新”按手机架构选择本仓库 HTTPS APK 链接并交由浏览器下载，安装仍需用户确认。
+
+发布新版本时必须递增版本号并沿用 `v2.11.36-themes.4` 这样的四段编号格式，上传 APK 后发布为正式 Latest。
+先手动安装 themes.3 或更高版本才能使用更新提醒；旧 APK 不会自动获得此功能。
+更新检查不发送订阅和代理配置，但正常网络请求会让 GitHub 收到 IP 地址及应用 User-Agent。
+
+实现：`app/.../update/ReleaseUpdate.kt`、`AppUpdatePrompt.kt`，在 MainActivity 的 onResume/onStop 中管理检查及弹窗生命周期。
+单元测试：`app/src/test/java/com/github/kr328/clash/update/ReleaseUpdatesTest.kt`。
+执行：`.\gradlew.bat :app:testMetaReleaseUnitTest :app:assembleMetaRelease :app:lintMetaRelease`。
