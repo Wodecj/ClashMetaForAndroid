@@ -23,6 +23,8 @@ import com.github.kr328.clash.design.util.backgroundSurfaceColor
 import com.github.kr328.clash.design.util.backgroundTextShadow
 import com.github.kr328.clash.design.component.ProxyView
 import com.github.kr328.clash.design.view.ActivityBarLayout
+import com.github.kr328.clash.design.view.LargeActionCard
+import com.github.kr328.clash.design.view.WallpaperProfileLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.Mutex
@@ -34,6 +36,9 @@ internal object ThemeBackground {
     fun refreshSurfaces(content: View, store: UiStore, percent: Int = store.backgroundOpacityPercent) {
         val enabled = store.backgroundTheme != BackgroundTheme.Default
         fun visit(view: View) {
+            if (view is LargeActionCard) view.surfaceOpacityPercent = percent
+            if (view is WallpaperProfileLayout) view.surfaceOpacityPercent = percent
+            if (view is ActivityBarLayout) view.surfaceOpacityPercent = percent
             if (enabled && (view is ActivityBarLayout ||
                 view.id == com.github.kr328.clash.design.R.id.tab_layout_view ||
                 view.id == com.github.kr328.clash.design.R.id.elevation_view)) {

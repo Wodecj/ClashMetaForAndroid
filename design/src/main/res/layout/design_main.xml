@@ -78,6 +78,7 @@
                 </LinearLayout>
 
                 <com.github.kr328.clash.design.view.LargeActionCard
+                    android:id="@+id/main_status_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/main_card_margin_vertical"

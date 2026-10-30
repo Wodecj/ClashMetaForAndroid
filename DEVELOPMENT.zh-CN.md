@@ -188,3 +188,11 @@ GitHub 自动生成的 Source code.zip 不含子模块，不能代替本流程�
 实现：`app/.../update/ReleaseUpdate.kt`、`AppUpdatePrompt.kt`，在 MainActivity 的 onResume/onStop 中管理检查及弹窗生命周期。
 单元测试：`app/src/test/java/com/github/kr328/clash/update/ReleaseUpdatesTest.kt`。
 执行：`.\gradlew.bat :app:testMetaReleaseUnitTest :app:assembleMetaRelease :app:lintMetaRelease`。
+
+## 11. 首页、配置透明度与机场排序（themes.5）
+
+首页普通卡片和配置卡片也随背景遮罩浓度调整透明度，0% 可透出背景图；运行状态卡片保留半透明高亮。
+配置页有两个及以上配置时，长按某张配置卡片并上下拖动即可排序，顺序自动保存在本机，刷新和重启仍保留。
+排序不修改当前启用的配置；新增配置追加到末尾，删除配置不会改变其余配置的相对顺序。
+卡片点击仍用于启用配置，三点按钮仍打开原菜单。
+实现位于 ProfilesDesign、ProfileOrder、WallpaperProfileLayout、LargeActionCard。

@@ -14,6 +14,7 @@ class UiStore(context: Context) {
     private val store = Store(
         context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).asStoreProvider()
     )
+    var profileOrder by store.string("profile_order", "")
     var backgroundTheme by store.enum(
         key = "background_theme",
         defaultValue = com.github.kr328.clash.design.model.BackgroundTheme.Default,

@@ -1,3 +1,4 @@
+// Modified by Wodecj, 2026-10-31: persistent long-press profile reordering.
 package com.github.kr328.clash.design
 
 import android.app.Dialog
@@ -6,6 +7,11 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
+import android.view.HapticFeedbackConstants
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.github.kr328.clash.design.store.UiStore
+import com.github.kr328.clash.design.model.BackgroundTheme
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.github.kr328.clash.design.adapter.ProfileAdapter
@@ -22,6 +28,7 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
@@ -41,6 +48,9 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
     private val binding = DesignProfilesBinding
         .inflate(context.layoutInflater, context.root, false)
     private val adapter = ProfileAdapter(context, this::requestActive, this::showMenu)
+    private val uiStore = UiStore(context)
+    private var dragging = false
+    private var pendingProfiles: List<Profile>? = null
 
     private var allUpdating: Boolean
         get() = adapter.states.allUpdating;
@@ -53,15 +63,15 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
         get() = binding.root
 
     suspend fun patchProfiles(profiles: List<Profile>) {
-        adapter.apply {
-            patchDataSet(this::profiles, profiles, id = { it.uuid })
-        }
-
-        val updatable = withContext(Dispatchers.Default) {
-            profiles.any { it.imported && it.type != Profile.Type.File }
-        }
-
         withContext(Dispatchers.Main) {
+            if (dragging) {
+                pendingProfiles = profiles
+                return@withContext
+            }
+            adapter.profiles = ProfileOrder.sorted(profiles, uiStore.profileOrder) { it.uuid.toString() }
+            uiStore.profileOrder = adapter.profiles.joinToString("|") { it.uuid.toString() }
+            adapter.notifyDataSetChanged()
+            val updatable = profiles.any { it.imported && it.type != Profile.Type.File }
             binding.updateView.visibility = if (updatable) View.VISIBLE else View.GONE
         }
     }
@@ -86,6 +96,42 @@ class ProfilesDesign(context: Context) : Design<ProfilesDesign.Request>(context)
         binding.mainList.recyclerList.also {
             it.bindAppBarElevation(binding.activityBarLayout)
             it.applyLinearAdapter(context, adapter)
+            it.clipToPadding = uiStore.backgroundTheme != BackgroundTheme.Default
+            it.contentDescription = context.getString(R.string.profiles_drag_hint)
+            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
+                override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int =
+                    if (adapter.itemCount > 1) super.getMovementFlags(recyclerView, viewHolder) else 0
+
+                override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                    super.onSelectedChanged(viewHolder, actionState)
+                    if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                        dragging = true
+                        viewHolder?.itemView?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    }
+                }
+
+                override fun onMove(recyclerView: RecyclerView, source: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder): Boolean {
+                    val from = source.bindingAdapterPosition
+                    val to = target.bindingAdapterPosition
+                    if (from !in adapter.profiles.indices || to !in adapter.profiles.indices || from == to) return false
+                    adapter.profiles = ProfileOrder.moved(adapter.profiles, from, to)
+                    adapter.notifyItemMoved(from, to)
+                    // Persist each crossed row as well, so an interrupted drag cannot lose the order.
+                    uiStore.profileOrder = adapter.profiles.joinToString("|") { it.uuid.toString() }
+                    return true
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+
+                override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                    super.clearView(recyclerView, viewHolder)
+                    dragging = false
+                    val latest = pendingProfiles
+                    pendingProfiles = null
+                    if (latest != null) launch { patchProfiles(latest) }
+                }
+            }).attachToRecyclerView(it)
         }
     }
 

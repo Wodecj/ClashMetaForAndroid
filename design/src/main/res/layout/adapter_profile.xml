@@ -18,7 +18,7 @@
         <import type="com.github.kr328.clash.design.util.IntervalKt" />
     </data>
 
-    <RelativeLayout
+    <com.github.kr328.clash.design.view.WallpaperProfileLayout
         android:elevation="5dp"
         android:id="@+id/root_view"
         android:layout_width="match_parent"
@@ -138,5 +138,5 @@
                 android:layout_margin="@dimen/item_tailing_margin"
                 android:background="@drawable/ic_baseline_more_vert" />
         </FrameLayout>
-    </RelativeLayout>
+    </com.github.kr328.clash.design.view.WallpaperProfileLayout>
 </layout>

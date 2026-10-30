@@ -55,3 +55,13 @@ Downloading is initiated only after the user selects Download update and opens i
 - Clips proxy rows to the scrolling content area so text does not overlap transparent toolbar tabs.
 - Retains original surfaces when the default theme is selected. Added surface-alpha regression tests.
 - Version name 2.11.36-themes.4, code 211040; same signing certificate and package.
+
+## Version 5 — 2026-10-31
+
+- Extended wallpaper transparency to home action cards and recycled profile cards; runtime-bound running/stopped colors retain the chosen alpha.
+- Enforced toolbar transparency after layout; profile rows clip below the transparent toolbar.
+- Added long-press vertical drag ordering of profile cards, saved locally by UUID and restored after refresh/restart.
+- Keeps active profile identity unchanged, appends newly added profiles, ignores deleted/stale IDs.
+- Defers profile dataset replacement while a drag is active; keeps the three-dot menu and normal activation clicks.
+- Added profile ordering regression tests. Default background retains original solid surfaces.
+- Version 2.11.36-themes.5, code 211041, same application ID and signing certificate.

@@ -1,7 +1,11 @@
+// Modified by Wodecj, 2026-10-31: wallpaper-aware home cards, including bound status colors.
 package com.github.kr328.clash.design.view
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.graphics.Canvas
+import com.github.kr328.clash.design.store.UiStore
+import com.github.kr328.clash.design.model.BackgroundTheme
 import android.util.AttributeSet
 import androidx.annotation.AttrRes
 import com.github.kr328.clash.design.R
@@ -14,6 +18,30 @@ class LargeActionCard @JvmOverloads constructor(
     attributeSet: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0
 ) : MaterialCardView(context, attributeSet, defStyleAttr) {
+    private val store = UiStore(context)
+    private var originalColor: Int? = null
+    private var lastRenderedColor: Int? = null
+    var surfaceOpacityPercent: Int? = null
+        set(value) { field = value; refreshSurface() }
+
+    fun refreshSurface() {
+        val actual = cardBackgroundColor.defaultColor
+        // Data binding can replace the running/stopped fill after the view is attached.
+        if (actual != lastRenderedColor) originalColor = actual
+        val enabled = store.backgroundTheme != BackgroundTheme.Default
+        val color = backgroundSurfaceColor(originalColor ?: actual, enabled,
+            surfaceOpacityPercent ?: store.backgroundOpacityPercent, id == R.id.main_status_card)
+        if (actual != color) setCardBackgroundColor(color)
+        lastRenderedColor = color
+        val targetElevation = if (color ushr 24 == 0) 0f else context.getPixels(R.dimen.large_action_card_elevation).toFloat()
+        if (elevation != targetElevation) elevation = targetElevation
+    }
+
+    override fun draw(canvas: Canvas) {
+        refreshSurface()
+        super.draw(canvas)
+    }
+
     private val binding = ComponentLargeActionLabelBinding
         .inflate(context.layoutInflater, this, true)
 
