@@ -27,6 +27,7 @@ class ProxyViewState(
 
     private var delay: Int = 0
     private var selected: Boolean = false
+    val isSelected: Boolean get() = selected
     private var parentNow: String = ""
     private var linkNow: String? = null
 

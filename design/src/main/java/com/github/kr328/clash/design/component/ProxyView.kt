@@ -2,16 +2,23 @@ package com.github.kr328.clash.design.component
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.View
 import com.github.kr328.clash.common.compat.getDrawableCompat
 import com.github.kr328.clash.design.store.UiStore
+import com.github.kr328.clash.design.model.BackgroundTheme
+import com.github.kr328.clash.design.util.backgroundSurfaceColor
+import com.github.kr328.clash.design.util.backgroundTextShadow
 
 class ProxyView(
     context: Context,
     config: ProxyViewConfig,
 ) : View(context) {
+    private val uiStore = UiStore(context)
+    var surfaceOpacityPercent: Int? = null
+        set(value) { field = value; invalidate() }
 
     init {
         background = context.getDrawableCompat(config.clickableBackground)
@@ -70,7 +77,9 @@ class ProxyView(
 
         paint.reset()
 
-        paint.color = state.background
+        paint.color = backgroundSurfaceColor(state.background,
+            uiStore.backgroundTheme != BackgroundTheme.Default,
+            surfaceOpacityPercent ?: uiStore.backgroundOpacityPercent, state.isSelected)
         paint.style = Paint.Style.FILL
 
         // draw background
@@ -92,7 +101,7 @@ class ProxyView(
                     Path.Direction.CW,
                 )
 
-                paint.setShadowLayer(
+                if (Color.alpha(paint.color) > 0) paint.setShadowLayer(
                     state.config.cardRadius,
                     state.config.cardOffset,
                     state.config.cardOffset,
@@ -165,6 +174,11 @@ class ProxyView(
         paint.textSize = state.config.textSize
         paint.isAntiAlias = true
         paint.color = state.controls
+        if (uiStore.backgroundTheme != BackgroundTheme.Default &&
+            (surfaceOpacityPercent ?: uiStore.backgroundOpacityPercent) < 50) {
+            paint.setShadowLayer(resources.displayMetrics.density * 1.5f, 0f, 0f,
+                backgroundTextShadow(state.controls))
+        }
 
         // draw delay
         canvas.apply {

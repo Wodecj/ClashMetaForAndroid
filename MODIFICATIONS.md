@@ -45,3 +45,13 @@ Existing upstream network and VPN behavior is described in PRIVACY_POLICY.md.
 Privacy addition: opening the main screen contacts api.github.com to check the public latest release.
 No token, subscription contents or proxy configuration are sent. GitHub receives normal connection metadata (IP address and app User-Agent).
 Downloading is initiated only after the user selects Download update and opens in the system browser.
+
+## Version 4 — 2026-10-31
+
+- Fixed wallpaper being covered by solid proxy node cards and the toolbar/tab strip.
+- In non-default background modes these surfaces follow the 0–100% overlay slider; 0% removes unselected node surfaces.
+- Keeps selected nodes visibly tinted (at least 65% fill) and adds contrast shadows to text at low concentrations.
+- Refreshes surface opacity during live preview and on returning to an existing screen.
+- Clips proxy rows to the scrolling content area so text does not overlap transparent toolbar tabs.
+- Retains original surfaces when the default theme is selected. Added surface-alpha regression tests.
+- Version name 2.11.36-themes.4, code 211040; same signing certificate and package.

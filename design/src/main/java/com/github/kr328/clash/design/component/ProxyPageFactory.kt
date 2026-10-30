@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.kr328.clash.design.view.VerticalScrollableHost
+import com.github.kr328.clash.design.store.UiStore
+import com.github.kr328.clash.design.model.BackgroundTheme
 
 class ProxyPageFactory(private val config: ProxyViewConfig) {
     class Holder(
@@ -47,7 +49,8 @@ class ProxyPageFactory(private val config: ProxyViewConfig) {
 
             setRecycledViewPool(childrenPool)
 
-            clipToPadding = false
+            // Transparent chrome must not have scrolling node text drawn behind it.
+            clipToPadding = UiStore(config.context).backgroundTheme != BackgroundTheme.Default
         }
 
         return Holder(recyclerView, root).apply {

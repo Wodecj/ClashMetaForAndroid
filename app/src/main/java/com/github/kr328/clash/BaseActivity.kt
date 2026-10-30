@@ -42,6 +42,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
 
     internal fun previewBackgroundOpacity(percent: Int) {
         backgroundOverlay?.alpha = percent.coerceIn(0, 100) / 100f
+        design?.root?.let { ThemeBackground.refreshSurfaces(it, uiStore, percent) }
     }
     protected val events = Channel<Event>(Channel.UNLIMITED)
     protected var activityStarted: Boolean = false
@@ -54,6 +55,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
                 val (root, image) = ThemeBackground.wrap(this, value.root, uiStore)
                 setContentView(root)
                 backgroundOverlay = root.findViewById(R.id.theme_background_overlay)
+                ThemeBackground.refreshSurfaces(value.root, uiStore)
                 if (image != null) launch {
                     val bitmap = ThemeBackground.load(this@BaseActivity)
                     if (design === value) image.setImageBitmap(bitmap)
@@ -115,6 +117,7 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
 
     override fun onStart() {
         super.onStart()
+        design?.root?.let { ThemeBackground.refreshSurfaces(it, uiStore) }
         activityStarted = true
         Remote.broadcasts.addObserver(this)
         events.trySend(Event.ActivityStart)

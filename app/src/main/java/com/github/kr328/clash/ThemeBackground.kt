@@ -12,11 +12,17 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.util.AtomicFile
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.github.kr328.clash.design.model.BackgroundTheme
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.util.resolveThemedColor
+import com.github.kr328.clash.design.util.backgroundSurfaceColor
+import com.github.kr328.clash.design.util.backgroundTextShadow
+import com.github.kr328.clash.design.component.ProxyView
+import com.github.kr328.clash.design.view.ActivityBarLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.Mutex
@@ -25,6 +31,26 @@ import java.io.File
 
 /** A shared, bounded bitmap; no persistable URI permission or storage permission needed. */
 internal object ThemeBackground {
+    fun refreshSurfaces(content: View, store: UiStore, percent: Int = store.backgroundOpacityPercent) {
+        val enabled = store.backgroundTheme != BackgroundTheme.Default
+        fun visit(view: View) {
+            if (enabled && (view is ActivityBarLayout ||
+                view.id == com.github.kr328.clash.design.R.id.tab_layout_view ||
+                view.id == com.github.kr328.clash.design.R.id.elevation_view)) {
+                view.alpha = 1f
+                view.background = ColorDrawable(backgroundSurfaceColor(
+                    view.context.resolveThemedColor(android.R.attr.windowBackground), true, percent))
+            }
+            if (view is ProxyView) view.surfaceOpacityPercent = percent
+            if (view is TextView && enabled) {
+                view.setShadowLayer(if (percent < 50) view.resources.displayMetrics.density * 1.5f else 0f,
+                    0f, 0f, backgroundTextShadow(view.currentTextColor))
+            }
+            if (view is ViewGroup) for (index in 0 until view.childCount) visit(view.getChildAt(index))
+        }
+        visit(content)
+    }
+
     private val imageLock = Mutex()
     private var cached: Bitmap? = null
     private fun imageFile(context: Context) = File(context.filesDir, "theme-background.png")

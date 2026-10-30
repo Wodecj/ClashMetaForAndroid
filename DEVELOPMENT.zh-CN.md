@@ -13,7 +13,7 @@
 3. 「背景遮罩浓度」拖动滑条在 0–100% 间调节，实时预览，松手保存。0% 完整显示原图，100% 完全遮住背景；可与原有深色模式组合。
 4. 「恢复默认并删除自选图片」恢复默认外观。
 
-背景覆盖继承 BaseActivity 的主要页面；卡片、工具栏、弹窗保留原有表面色以保证阅读。
+背景覆盖继承 BaseActivity 的主要页面；themes.4 起，代理页节点卡片和顶部栏也随遮罩滑条调整透明度；0% 时未选中卡片透明，选中节点保留半透明高亮。低浓度时为文字增加对比阴影。弹窗保持可读的表面色。
 图片最大 20 MiB，最长边采样到不超过 1920 像素，居中裁剪。取消选择保持现状。
 首次启动仍需自行导入有效的代理配置；软件不附带订阅或服务器。
 
@@ -141,7 +141,7 @@ Artifacts 默认保存 30 天，下载通常要求 GitHub 登录；给普通用�
 真机验收完成后执行；tag 必须指向构建时的 SOURCE_COMMIT.txt 提交：
 
 ```powershell
-gh release create v2.11.36-themes.3 --target <构建提交SHA> --title 'Clash Meta Themes 1' --notes-file MODIFICATIONS.md dist\*.apk dist\corresponding-source.tar.gz dist\LICENSE dist\NOTICE dist\SHA256SUMS.txt dist\SOURCE_COMMIT.txt
+gh release create v2.11.36-themes.4 --target <构建提交SHA> --title 'Clash Meta Themes 1' --notes-file MODIFICATIONS.md dist\*.apk dist\corresponding-source.tar.gz dist\LICENSE dist\NOTICE dist\SHA256SUMS.txt dist\SOURCE_COMMIT.txt
 ```
 
 确认仓库为公开后，分享 Releases 页：https://github.com/Wodecj/ClashMetaForAndroid/releases 。
