@@ -5,7 +5,6 @@ package com.github.kr328.clash
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.graphics.drawable.ColorDrawable
@@ -115,8 +114,9 @@ internal object ThemeBackground {
         frame.addView(image, FrameLayout.LayoutParams(-1, -1))
         val base = context.resolveThemedColor(android.R.attr.windowBackground)
         frame.addView(View(context).apply {
-            background = ColorDrawable(Color.argb(store.backgroundOpacity.alpha,
-                Color.red(base), Color.green(base), Color.blue(base)))
+            id = com.github.kr328.clash.design.R.id.theme_background_overlay
+            background = ColorDrawable(base)
+            alpha = store.backgroundOpacityPercent / 100f
         }, FrameLayout.LayoutParams(-1, -1))
         frame.addView(content, FrameLayout.LayoutParams(-1, -1))
         return frame to image.takeIf { store.backgroundTheme == BackgroundTheme.Custom }

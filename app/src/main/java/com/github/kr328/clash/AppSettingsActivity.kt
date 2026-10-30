@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.github.kr328.clash.design.model.BackgroundTheme
-import com.github.kr328.clash.design.model.BackgroundOpacity
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import com.github.kr328.clash.common.util.componentName
@@ -47,6 +46,10 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
             this,
             clashRunning,
             ::onHideIconChange,
+            { percent ->
+                ApplicationObserver.createdActivities.filterIsInstance<BaseActivity<*>>()
+                    .forEach { it.previewBackgroundOpacity(percent) }
+            },
         )
 
         setContentDesign(design)
@@ -66,7 +69,7 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
                         AppSettingsDesign.Request.ResetBackground -> {
                             ThemeBackground.reset(this@AppSettingsActivity)
                             uiStore.backgroundTheme = BackgroundTheme.Default
-                            uiStore.backgroundOpacity = BackgroundOpacity.Balanced
+                            uiStore.backgroundOpacityPercent = 85
                             recreateAll()
                         }
                         AppSettingsDesign.Request.ReCreateAllActivities -> recreateAll()

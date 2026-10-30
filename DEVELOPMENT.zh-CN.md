@@ -10,7 +10,7 @@
 
 1. 「主题背景」选择默认、海洋、森林、晚霞或自选图片。
 2. 「选择背景图片」通过系统文件选择器导入图片，成功后自动启用。
-3. 「背景遮罩浓度」选择 70%、85%、95%；可与原有深色模式组合。
+3. 「背景遮罩浓度」拖动滑条在 0–100% 间调节，实时预览，松手保存。0% 完整显示原图，100% 完全遮住背景；可与原有深色模式组合。
 4. 「恢复默认并删除自选图片」恢复默认外观。
 
 背景覆盖继承 BaseActivity 的主要页面；卡片、工具栏、弹窗保留原有表面色以保证阅读。
@@ -141,7 +141,7 @@ Artifacts 默认保存 30 天，下载通常要求 GitHub 登录；给普通用�
 真机验收完成后执行；tag 必须指向构建时的 SOURCE_COMMIT.txt 提交：
 
 ```powershell
-gh release create v2.11.36-themes.1 --target <构建提交SHA> --title 'Clash Meta Themes 1' --notes-file MODIFICATIONS.md dist\*.apk dist\corresponding-source.tar.gz dist\LICENSE dist\NOTICE dist\SHA256SUMS.txt dist\SOURCE_COMMIT.txt
+gh release create v2.11.36-themes.2 --target <构建提交SHA> --title 'Clash Meta Themes 1' --notes-file MODIFICATIONS.md dist\*.apk dist\corresponding-source.tar.gz dist\LICENSE dist\NOTICE dist\SHA256SUMS.txt dist\SOURCE_COMMIT.txt
 ```
 
 确认仓库为公开后，分享 Releases 页：https://github.com/Wodecj/ClashMetaForAndroid/releases 。
@@ -166,7 +166,7 @@ GitHub 自动生成的 Source code.zip 不含子模块，不能代替本流程�
 ## 9. 发布前真机验收
 
 - 四种内置模式与自选图片；取消选择、损坏图片、超过 20 MiB、删除原相册图片、重启进程。
-- 遮罩三档与浅色/深色，首页/设置/配置/代理/日志页面、横竖屏、大字体。
+- 遮罩 0%、50%、100% 及拖动预览、松手保存、旧版设置迁移与浅色/深色，首页/设置/配置/代理/日志页面、横竖屏、大字体。
 - Android 5/7/10/13/15 中实际覆盖的版本，尤其图片选择器与 VPN 授权。
 - 导入订阅、启动/停止 VPN、节点切换、后台服务和通知；背景改动不应影响代理行为。
 - 安装首版，再用相同签名、更大 versionCode 覆盖升级。

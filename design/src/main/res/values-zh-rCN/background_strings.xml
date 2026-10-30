@@ -10,9 +10,8 @@
     <string formatted="false" name="background_pick">选择背景图片</string>
     <string formatted="false" name="background_pick_summary">仅保存在本机；最大 20 MiB；居中裁剪</string>
     <string formatted="false" name="background_opacity">背景遮罩浓度</string>
-    <string formatted="false" name="background_soft">轻柔（70%）</string>
-    <string formatted="false" name="background_balanced">均衡（85%）</string>
-    <string formatted="false" name="background_strong">清晰（95%）</string>
     <string formatted="false" name="background_reset">恢复默认并删除自选图片</string>
     <string formatted="false" name="background_import_error">导入失败，请选择小于 20 MiB 的有效图片。</string>
+    <string name="background_opacity_value">%1$d%%</string>
+    <string formatted="false" name="background_opacity_hint">0%：无遮罩，显示原图；100%：完全遮住背景</string>
 </resources>

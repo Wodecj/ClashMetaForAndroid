@@ -21,6 +21,7 @@ class AppSettingsDesign(
     behavior: Behavior,
     running: Boolean,
     onHideIconChange: (hide: Boolean) -> Unit,
+    onBackgroundOpacityPreview: (Int) -> Unit,
 ) : Design<AppSettingsDesign.Request>(context) {
     enum class Request {
         ReCreateAllActivities, PickBackground, ResetBackground
@@ -64,15 +65,7 @@ class AppSettingsDesign(
             clickable(R.string.background_pick, summary = R.string.background_pick_summary) {
                 clicked { requests.trySend(Request.PickBackground) }
             }
-            selectableList(
-                value = uiStore::backgroundOpacity,
-                values = com.github.kr328.clash.design.model.BackgroundOpacity.values(),
-                valuesText = arrayOf(R.string.background_soft, R.string.background_balanced,
-                    R.string.background_strong),
-                title = R.string.background_opacity
-            ) {
-                listener = OnChangedListener { requests.trySend(Request.ReCreateAllActivities) }
-            }
+            backgroundOpacitySlider(uiStore::backgroundOpacityPercent, onBackgroundOpacityPreview)
             clickable(R.string.background_reset) {
                 clicked { requests.trySend(Request.ResetBackground) }
             }

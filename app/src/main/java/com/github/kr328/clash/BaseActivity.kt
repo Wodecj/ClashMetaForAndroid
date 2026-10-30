@@ -38,6 +38,11 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
     Broadcasts.Observer {
     
     protected val uiStore by lazy { UiStore(this) }
+    private var backgroundOverlay: View? = null
+
+    internal fun previewBackgroundOpacity(percent: Int) {
+        backgroundOverlay?.alpha = percent.coerceIn(0, 100) / 100f
+    }
     protected val events = Channel<Event>(Channel.UNLIMITED)
     protected var activityStarted: Boolean = false
     protected val clashRunning: Boolean
@@ -48,11 +53,13 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
             if (value != null) {
                 val (root, image) = ThemeBackground.wrap(this, value.root, uiStore)
                 setContentView(root)
+                backgroundOverlay = root.findViewById(R.id.theme_background_overlay)
                 if (image != null) launch {
                     val bitmap = ThemeBackground.load(this@BaseActivity)
                     if (design === value) image.setImageBitmap(bitmap)
                 }
             } else {
+                backgroundOverlay = null
                 setContentView(View(this))
             }
         }

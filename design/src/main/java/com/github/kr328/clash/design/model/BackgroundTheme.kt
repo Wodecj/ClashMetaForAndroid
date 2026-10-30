@@ -3,4 +3,3 @@
 package com.github.kr328.clash.design.model
 
 enum class BackgroundTheme { Default, Ocean, Forest, Sunset, Custom }
-enum class BackgroundOpacity(val alpha: Int) { Soft(179), Balanced(217), Strong(242) }

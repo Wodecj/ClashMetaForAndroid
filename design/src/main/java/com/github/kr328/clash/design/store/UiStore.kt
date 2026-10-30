@@ -20,11 +20,20 @@ class UiStore(context: Context) {
         values = com.github.kr328.clash.design.model.BackgroundTheme.values()
     )
 
-    var backgroundOpacity by store.enum(
-        key = "background_opacity",
-        defaultValue = com.github.kr328.clash.design.model.BackgroundOpacity.Balanced,
-        values = com.github.kr328.clash.design.model.BackgroundOpacity.values()
-    )
+    private var savedBackgroundOpacityPercent by store.int("background_opacity_percent", -1)
+
+    var backgroundOpacityPercent: Int
+        get() {
+            val saved = savedBackgroundOpacityPercent
+            if (saved >= 0) return saved.coerceIn(0, 100)
+            // Version 1 saved enum names; retain those users' selected concentration.
+            return when (store.provider.getString("background_opacity", "Balanced")) {
+                "Soft" -> 70
+                "Strong" -> 95
+                else -> 85
+            }
+        }
+        set(value) { savedBackgroundOpacityPercent = value.coerceIn(0, 100) }
 
 
     var enableVpn: Boolean by store.boolean(
