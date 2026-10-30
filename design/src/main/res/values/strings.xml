@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PluralsCandidate">
-    <string name="launch_name_meta">Clash Meta</string>
+    <!-- Modified by Wodecj, 2026-10-30: identify independent theme distribution. -->
+    <string name="launch_name_meta">Clash Meta Themes</string>
     <string name="launch_name_alpha">Clash Meta Alpha</string>
-    <string name="application_name_meta">Clash Meta for Android</string>
+    <string name="application_name_meta">Clash Meta Themes for Android</string>
     <string name="application_name_alpha">Clash Meta for Android Alpha</string>
 
     <string name="stopped">Stopped</string>

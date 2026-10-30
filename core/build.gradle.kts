@@ -1,3 +1,4 @@
+// Modified by Wodecj, 2026-10-30: pin native build tooling.
 import android.databinding.tool.ext.capitalizeUS
 import com.github.kr328.golang.GolangBuildTask
 import com.github.kr328.golang.GolangPlugin
@@ -44,6 +45,7 @@ android {
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
         }
     }
 }
