@@ -10,6 +10,7 @@ Mihomo submodule remains pinned to `3f27ef39f8c96bbfbc8b0b9bb10f5c9ef60149d8`.
 - Changed default application ID to `com.github.wodecj.clash.themes` (meta flavor adds `.meta`).
 - Fork version: 2.11.36-themes.1, version code 211037.
 - Release signing requires a private keystore path; removed debug-key fallback for release builds.
+- Fixed upstream CMake version detection for detached/shallow checkouts and source archives.
 - Added a dedicated Android build workflow with source archive and SHA-256 checksums.
 - Moved inherited automation to `.github/upstream-workflows/` for reference only.
 
