@@ -20,14 +20,18 @@ import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.util.resolveThemedColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.io.File
 
 /** A shared, bounded bitmap; no persistable URI permission or storage permission needed. */
 internal object ThemeBackground {
+    private val imageLock = Mutex()
     private var cached: Bitmap? = null
     private fun imageFile(context: Context) = File(context.filesDir, "theme-background.png")
 
     suspend fun importImage(context: Context, uri: Uri) = withContext(Dispatchers.IO) {
+        imageLock.withLock {
         val temp = File.createTempFile("background-", ".tmp", context.cacheDir)
         try {
             context.contentResolver.openInputStream(uri)?.use { input ->
@@ -80,15 +84,20 @@ internal object ThemeBackground {
                 cached = null
             } finally { bitmap.recycle() }
         } finally { temp.delete() }
+        }
     }
 
     suspend fun reset(context: Context) = withContext(Dispatchers.IO) {
+        imageLock.withLock {
         AtomicFile(imageFile(context)).delete()
         cached = null
+        }
     }
 
     suspend fun load(context: Context): Bitmap? = withContext(Dispatchers.IO) {
-        cached ?: BitmapFactory.decodeFile(imageFile(context).path)?.also { cached = it }
+        imageLock.withLock {
+            cached ?: BitmapFactory.decodeFile(imageFile(context).path)?.also { cached = it }
+        }
     }
 
     fun wrap(context: Context, content: View, store: UiStore): Pair<View, ImageView?> {
