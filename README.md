@@ -1,3 +1,7 @@
+> **Wodecj Android 主题背景修改版**：默认、海洋、森林、晚霞、自选本地图片及三档遮罩。
+> 开发环境、操作命令、签名打包与发布：[中文指南](DEVELOPMENT.zh-CN.md)。
+> 修改与许可证说明：[MODIFICATIONS.md](MODIFICATIONS.md)。独立修改版，非官方发行。
+
 ## Clash Meta for Android
 
 A Graphical user interface of [Clash.Meta](https://github.com/MetaCubeX/Clash.Meta) for Android

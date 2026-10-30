@@ -32,6 +32,7 @@ jobs:
         with:
           go-download-base-url: https://github.com/MetaCubeX/go/releases/download/build
           go-version: '1.26'
+          cache-dependency-path: core/src/foss/golang/go.sum
       - name: Patch Go as required by upstream
         run: |
           cd "$(go env GOROOT)"
