@@ -35,7 +35,11 @@ jobs:
           done
       - name: Publish preview with complete source and notices
         run: |
-          gh release create v2.11.36-themes.1 --prerelease \
-            --target 6a814f19f2ddec4082735660b97ef3b968443cdf \
-            --title 'Clash Meta Themes Android 预览版 1' \
-            --notes-file .github/preview-notes.md dist/*
+          if gh release view v2.11.36-themes.1 > /dev/null 2>&1; then
+            gh release upload v2.11.36-themes.1 --clobber dist/*
+          else
+            gh release create v2.11.36-themes.1 --prerelease \
+              --target 6a814f19f2ddec4082735660b97ef3b968443cdf \
+              --title 'Clash Meta Themes Android 预览版 1' \
+              --notes-file .github/preview-notes.md dist/*
+          fi
