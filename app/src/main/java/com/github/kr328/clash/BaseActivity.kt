@@ -1,3 +1,4 @@
+// Modified by Wodecj, 2026-10-30: shared activity background.
 package com.github.kr328.clash
 
 import android.app.ActivityManager
@@ -45,7 +46,12 @@ abstract class BaseActivity<D : Design<*>> : AppCompatActivity(),
         set(value) {
             field = value
             if (value != null) {
-                setContentView(value.root)
+                val (root, image) = ThemeBackground.wrap(this, value.root, uiStore)
+                setContentView(root)
+                if (image != null) launch {
+                    val bitmap = ThemeBackground.load(this@BaseActivity)
+                    if (design === value) image.setImageBitmap(bitmap)
+                }
             } else {
                 setContentView(View(this))
             }

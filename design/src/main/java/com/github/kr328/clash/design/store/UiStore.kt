@@ -1,3 +1,4 @@
+// Modified by Wodecj, 2026-10-30: persistent background settings.
 package com.github.kr328.clash.design.store
 
 import android.content.ComponentName
@@ -11,10 +12,20 @@ import com.github.kr328.clash.design.model.DarkMode
 
 class UiStore(context: Context) {
     private val store = Store(
-        context
-            .getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
-            .asStoreProvider()
+        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).asStoreProvider()
     )
+    var backgroundTheme by store.enum(
+        key = "background_theme",
+        defaultValue = com.github.kr328.clash.design.model.BackgroundTheme.Default,
+        values = com.github.kr328.clash.design.model.BackgroundTheme.values()
+    )
+
+    var backgroundOpacity by store.enum(
+        key = "background_opacity",
+        defaultValue = com.github.kr328.clash.design.model.BackgroundOpacity.Balanced,
+        values = com.github.kr328.clash.design.model.BackgroundOpacity.values()
+    )
+
 
     var enableVpn: Boolean by store.boolean(
         key = "enable_vpn",

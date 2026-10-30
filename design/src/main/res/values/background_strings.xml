@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Added by Wodecj, 2026-10-30. GPL-3.0-or-later. -->
+<resources>
+    <string name="background_theme">Theme background</string>
+    <string name="background_default">Default</string>
+    <string name="background_ocean">Ocean</string>
+    <string name="background_forest">Forest</string>
+    <string name="background_sunset">Sunset</string>
+    <string name="background_custom">Custom image (choose below)</string>
+    <string name="background_pick">Choose background image</string>
+    <string name="background_pick_summary">Stored locally only; up to 20 MiB; center cropped</string>
+    <string name="background_opacity">Readability overlay</string>
+    <string name="background_soft">Soft (70%)</string>
+    <string name="background_balanced">Balanced (85%)</string>
+    <string name="background_strong">Strong (95%)</string>
+    <string name="background_reset">Restore default and delete custom image</string>
+    <string name="background_import_error">Cannot import image. Choose a valid image smaller than 20 MiB.</string>
+</resources>

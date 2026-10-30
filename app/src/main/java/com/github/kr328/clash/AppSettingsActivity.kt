@@ -1,7 +1,14 @@
+// Modified by Wodecj, 2026-10-30: background image import and reset.
 package com.github.kr328.clash
 
 import android.content.ComponentName
 import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import com.github.kr328.clash.design.model.BackgroundTheme
+import com.github.kr328.clash.design.model.BackgroundOpacity
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 import com.github.kr328.clash.common.util.componentName
 import com.github.kr328.clash.design.AppSettingsDesign
 import com.github.kr328.clash.design.model.Behavior
@@ -12,6 +19,26 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.selects.select
 
 class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
+    private var importing = false
+    private val pickBackground = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) launch {
+            importing = true
+            try {
+                ThemeBackground.importImage(this@AppSettingsActivity, uri)
+                uiStore.backgroundTheme = BackgroundTheme.Custom
+                recreateAll()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Toast.makeText(this@AppSettingsActivity,
+                    com.github.kr328.clash.design.R.string.background_import_error, Toast.LENGTH_LONG).show()
+            } finally { importing = false }
+        }
+    }
+
+    private fun recreateAll() {
+        ApplicationObserver.createdActivities.toList().forEach { it.recreate() }
+    }
     override suspend fun main() {
         val design = AppSettingsDesign(
             this,
@@ -34,8 +61,15 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
                     }
                 }
                 design.requests.onReceive {
-                    ApplicationObserver.createdActivities.forEach {
-                        it.recreate()
+                    if (!importing) when (it) {
+                        AppSettingsDesign.Request.PickBackground -> pickBackground.launch("image/*")
+                        AppSettingsDesign.Request.ResetBackground -> {
+                            ThemeBackground.reset(this@AppSettingsActivity)
+                            uiStore.backgroundTheme = BackgroundTheme.Default
+                            uiStore.backgroundOpacity = BackgroundOpacity.Balanced
+                            recreateAll()
+                        }
+                        AppSettingsDesign.Request.ReCreateAllActivities -> recreateAll()
                     }
                 }
             }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Added by Wodecj, 2026-10-30. GPL-3.0-or-later. -->
+<resources>
+    <string name="background_theme">主题背景</string>
+    <string name="background_default">默认</string>
+    <string name="background_ocean">海洋</string>
+    <string name="background_forest">森林</string>
+    <string name="background_sunset">晚霞</string>
+    <string name="background_custom">自选图片（请在下方选择）</string>
+    <string name="background_pick">选择背景图片</string>
+    <string name="background_pick_summary">仅保存在本机；最大 20 MiB；居中裁剪</string>
+    <string name="background_opacity">背景遮罩浓度</string>
+    <string name="background_soft">轻柔（70%）</string>
+    <string name="background_balanced">均衡（85%）</string>
+    <string name="background_strong">清晰（95%）</string>
+    <string name="background_reset">恢复默认并删除自选图片</string>
+    <string name="background_import_error">导入失败，请选择小于 20 MiB 的有效图片。</string>
+</resources>

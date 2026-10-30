@@ -1,3 +1,4 @@
+// Modified by Wodecj, 2026-10-30: background controls.
 package com.github.kr328.clash.design
 
 import android.content.Context
@@ -22,7 +23,7 @@ class AppSettingsDesign(
     onHideIconChange: (hide: Boolean) -> Unit,
 ) : Design<AppSettingsDesign.Request>(context) {
     enum class Request {
-        ReCreateAllActivities
+        ReCreateAllActivities, PickBackground, ResetBackground
     }
 
     private val binding = DesignSettingsCommonBinding
@@ -49,6 +50,32 @@ class AppSettingsDesign(
             )
 
             category(R.string.interface_)
+
+            selectableList(
+                value = uiStore::backgroundTheme,
+                values = com.github.kr328.clash.design.model.BackgroundTheme.values(),
+                valuesText = arrayOf(R.string.background_default, R.string.background_ocean,
+                    R.string.background_forest, R.string.background_sunset, R.string.background_custom),
+                icon = R.drawable.ic_baseline_brightness_4,
+                title = R.string.background_theme
+            ) {
+                listener = OnChangedListener { requests.trySend(Request.ReCreateAllActivities) }
+            }
+            clickable(R.string.background_pick, summary = R.string.background_pick_summary) {
+                clicked { requests.trySend(Request.PickBackground) }
+            }
+            selectableList(
+                value = uiStore::backgroundOpacity,
+                values = com.github.kr328.clash.design.model.BackgroundOpacity.values(),
+                valuesText = arrayOf(R.string.background_soft, R.string.background_balanced,
+                    R.string.background_strong),
+                title = R.string.background_opacity
+            ) {
+                listener = OnChangedListener { requests.trySend(Request.ReCreateAllActivities) }
+            }
+            clickable(R.string.background_reset) {
+                clicked { requests.trySend(Request.ResetBackground) }
+            }
 
             selectableList(
                 value = uiStore::darkMode,

@@ -1,16 +1,16 @@
-name: Build Pre-Release
+name: Build Release
+# Modified by Wodecj, 2026-10-30: manual upstream reference only.
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
-  BuildPreRelease:
+  BuildRelease:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       
       - name: Checkout submodules
         run: git submodule update --init --recursive --force
@@ -43,6 +43,41 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      
+      - name: Convert and set version env
+        id: process-version
+        run: |
+          VERSION_TAG=${{ inputs.release-tag }}
+          VERSION_TAG=${VERSION_TAG#v}                              # remove the 'v' prefix
+          IFS='.' read -ra VERSION_PARTS <<< "$VERSION_TAG"         # split into array
+          VERSION_CODE=$(printf "%1d%02d%03d" "${VERSION_PARTS[0]}" "${VERSION_PARTS[1]}" "${VERSION_PARTS[2]}")
+          
+          echo "versonName=$VERSION_TAG" >> $GITHUB_OUTPUT          # "1.2.3"
+          echo "versonCode=$VERSION_CODE" >> $GITHUB_OUTPUT         # "102003"
+      
+      # Re-write version in build.gradle.kts
+      - name: Re-write version
+        uses: Devofure/advance-android-version-actions@v1.5
+        with:
+          gradlePath: build.gradle.kts
+          versionCode: ${{ steps.process-version.outputs.versonCode }}
+          versionName: ${{ steps.process-version.outputs.versonName }}
+      
+      # If any change found, commit it and push
+      - name: Commit and push if changes
+        run: |
+          changes=$(git diff --name-only origin/main | wc -l)
+          if [ $changes -gt 0 ]
+          then
+            newVersionName=${{ steps.process-version.outputs.versonName }}
+            newVersionCode=${{ steps.process-version.outputs.versonCode }}
+            git config --global user.name 'GitHub Action'
+            git config --global user.email 'action@github.com'
+            git add build.gradle.kts
+            git commit -am "Bump version to $newVersionName ($newVersionCode)"
+            git tag "v$newVersionName"
+            git push --follow-tags
+          fi
 
       - name: Update CA
         run: |
@@ -61,35 +96,32 @@ jobs:
           echo key.alias="$SIGNING_KEY_ALIAS" >> signing.properties
           echo key.password="$SIGNING_KEY_PASSWORD" >> signing.properties
             
-          echo "cat signing.properties"
-          cat signing.properties
 
-      - name: Pre-release Build
+      - name: Release Build
         if: success()
-        run: ./gradlew --no-daemon app:assembleAlphaRelease
-
-      # Delete old Prerelease-alpha
-      - uses: dev-drprasad/delete-tag-and-release@v1.1
-        with:
-          tag_name: Prerelease-alpha
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_release: true
+        run: ./gradlew --no-daemon app:assembleMetaRelease
 
       - name: Tag Repo
         uses: richardsimko/update-tag@v3
         with:
-          tag_name: Prerelease-alpha
+          tag_name: ${{ inputs.release-tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Alpha
+      - name: Upload Release
         uses: softprops/action-gh-release@v3
-        if: ${{  success() }}
+        if: ${{ success() }}
         with:
-          tag_name: Prerelease-alpha
-          files: app/build/outputs/apk/alpha/release/*
-          prerelease: true
+          tag_name: ${{ inputs.release-tag }}
+          files: app/build/outputs/apk/meta/release/*
           generate_release_notes: true
 
       - name: Release Changelog Builder
         uses: mikepenz/release-changelog-builder-action@v6
+        with:
+          configurationJson: |
+            {
+              "ignore_labels": [
+                "Update"
+              ],
+            }
