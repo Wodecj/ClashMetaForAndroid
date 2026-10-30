@@ -65,3 +65,11 @@ Downloading is initiated only after the user selects Download update and opens i
 - Defers profile dataset replacement while a drag is active; keeps the three-dot menu and normal activation clicks.
 - Added profile ordering regression tests. Default background retains original solid surfaces.
 - Version 2.11.36-themes.5, code 211041, same application ID and signing certificate.
+
+## Version 6 — 2026-10-31
+
+- Made the stopped home status card fully transparent, with zero card elevation, at every overlay concentration and in default background mode as well.
+- Binds the real running state explicitly; only running status keeps the colored highlight.
+- Removed the forced dark theme from the status card: stopped text/icons follow the page theme, running text/icons stay white.
+- Updates text contrast and icon tint when the service state changes. Added stopped/running surface regression tests.
+- Version 2.11.36-themes.6, code 211042; same package and signing certificate.

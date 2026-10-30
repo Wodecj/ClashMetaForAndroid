@@ -2,10 +2,21 @@
 package com.github.kr328.clash.update
 
 import com.github.kr328.clash.design.util.backgroundSurfaceColor
+import com.github.kr328.clash.design.util.homeStatusSurfaceColor
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class BackgroundSurfaceTest {
+    @Test fun stoppedStatusIsAlwaysTransparentEvenAtFullConcentration() {
+        for (enabled in listOf(true, false)) for (percent in listOf(0, 50, 100)) {
+            assertEquals(0, homeStatusSurfaceColor(0xff888888.toInt(), enabled, percent, false))
+        }
+    }
+    @Test fun startedStatusKeepsItsBlueHighlight() {
+        val blue = 0xff204372.toInt()
+        assertEquals(166, homeStatusSurfaceColor(blue, true, 0, true) ushr 24)
+        assertEquals(blue, homeStatusSurfaceColor(blue, false, 0, true))
+    }
     @Test fun zeroPercentRemovesOpaqueWhiteCards() {
         assertEquals(0x00ffffff, backgroundSurfaceColor(0xffffffff.toInt(), true, 0))
     }

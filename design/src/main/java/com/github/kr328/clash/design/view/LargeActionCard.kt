@@ -4,6 +4,8 @@ package com.github.kr328.clash.design.view
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.Canvas
+import android.graphics.Color
+import androidx.core.graphics.drawable.DrawableCompat
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.model.BackgroundTheme
 import android.util.AttributeSet
@@ -21,6 +23,9 @@ class LargeActionCard @JvmOverloads constructor(
     private val store = UiStore(context)
     private var originalColor: Int? = null
     private var lastRenderedColor: Int? = null
+    private var lastStatusStyle: Pair<Int, Boolean>? = null
+    var statusRunning: Boolean = false
+        set(value) { field = value; refreshSurface(); invalidate() }
     var surfaceOpacityPercent: Int? = null
         set(value) { field = value; refreshSurface() }
 
@@ -29,12 +34,39 @@ class LargeActionCard @JvmOverloads constructor(
         // Data binding can replace the running/stopped fill after the view is attached.
         if (actual != lastRenderedColor) originalColor = actual
         val enabled = store.backgroundTheme != BackgroundTheme.Default
-        val color = backgroundSurfaceColor(originalColor ?: actual, enabled,
-            surfaceOpacityPercent ?: store.backgroundOpacityPercent, id == R.id.main_status_card)
+        val percent = surfaceOpacityPercent ?: store.backgroundOpacityPercent
+        val isStatus = id == R.id.main_status_card
+        val color = if (isStatus) homeStatusSurfaceColor(originalColor ?: actual, enabled, percent, statusRunning)
+            else backgroundSurfaceColor(originalColor ?: actual, enabled, percent)
         if (actual != color) setCardBackgroundColor(color)
         lastRenderedColor = color
         val targetElevation = if (color ushr 24 == 0) 0f else context.getPixels(R.dimen.large_action_card_elevation).toFloat()
         if (elevation != targetElevation) elevation = targetElevation
+        if (isStatus) {
+            if (cardElevation != targetElevation) cardElevation = targetElevation
+            refreshStatusContent()
+        }
+    }
+
+    private fun refreshStatusContent() {
+        if (id != R.id.main_status_card) return
+        val color = if (statusRunning) Color.WHITE
+            else context.resolveThemedColor(com.google.android.material.R.attr.colorOnSurface)
+        val shadow = store.backgroundTheme != BackgroundTheme.Default &&
+            (surfaceOpacityPercent ?: store.backgroundOpacityPercent) < 50
+        val style = color to shadow
+        if (lastStatusStyle == style) return
+        lastStatusStyle = style
+        for (label in listOf(binding.textView, binding.subtextView)) {
+            label.setTextColor(color)
+            label.setShadowLayer(if (shadow) resources.displayMetrics.density * 1.5f else 0f,
+                0f, 0f, backgroundTextShadow(color))
+        }
+        binding.iconView.background?.let {
+            val drawable = DrawableCompat.wrap(it).mutate()
+            DrawableCompat.setTint(drawable, color)
+            binding.iconView.background = drawable
+        }
     }
 
     override fun draw(canvas: Canvas) {
@@ -61,6 +93,8 @@ class LargeActionCard @JvmOverloads constructor(
         get() = binding.iconView.background
         set(value) {
             binding.iconView.background = value
+            lastStatusStyle = null
+            refreshStatusContent()
         }
 
     init {

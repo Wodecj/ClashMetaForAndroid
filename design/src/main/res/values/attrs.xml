@@ -3,6 +3,7 @@
     <attr name="fullScreenDialogTheme" format="reference" />
 
     <attr name="colorClashStopped" format="color" />
+    <attr name="statusRunning" format="boolean" />
     <attr name="colorControlDisabled" format="color" />
     <attr name="colorLogo" format="color" />
 

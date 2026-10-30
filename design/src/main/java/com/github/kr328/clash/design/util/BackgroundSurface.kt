@@ -15,3 +15,6 @@ fun backgroundTextShadow(color: Int): Int {
     val brightness = ((color ushr 16) and 255) + ((color ushr 8) and 255) + (color and 255)
     return if (brightness > 384) 0xb4000000.toInt() else 0xb4ffffff.toInt()
 }
+
+fun homeStatusSurfaceColor(color: Int, enabled: Boolean, percent: Int, running: Boolean): Int =
+    if (!running) 0 else backgroundSurfaceColor(color, enabled, percent, selected = true)
