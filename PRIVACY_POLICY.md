@@ -1,3 +1,12 @@
+# Theme fork update checks (added by Wodecj, 2026-10-30)
+
+From version 2.11.36-themes.3, opening the main screen checks the public latest release at
+`https://api.github.com/repos/Wodecj/ClashMetaForAndroid/releases/latest`.
+This request sends no account token, subscriptions or proxy configuration. GitHub receives
+ordinary connection metadata such as your IP address and the app User-Agent.
+Downloads start only after you choose the download action and are handled by your browser.
+Reminder/ignored-version settings are stored locally. The original policy follows.
+
 ## Privacy Policy
 
 The Clash for Android is built as an Open Source software. This app is provided by personal at no cost and is intended for use as is.
@@ -48,12 +57,3 @@ We may update our Privacy Policy from time to time. Thus, you are advised to rev
 **Contact Us**
 
 If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us.
-# Theme fork update checks (added by Wodecj, 2026-10-30)
-
-From version 2.11.36-themes.3, opening the main screen checks the public latest release at
-`https://api.github.com/repos/Wodecj/ClashMetaForAndroid/releases/latest`.
-This request sends no account token, subscriptions or proxy configuration. GitHub receives
-ordinary connection metadata such as your IP address and the app User-Agent.
-Downloads start only after you choose the download action and are handled by your browser.
-Reminder/ignored-version settings are stored locally. The original policy follows.
-
