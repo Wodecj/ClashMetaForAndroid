@@ -73,3 +73,11 @@ Downloading is initiated only after the user selects Download update and opens i
 - Removed the forced dark theme from the status card: stopped text/icons follow the page theme, running text/icons stay white.
 - Updates text contrast and icon tint when the service state changes. Added stopped/running surface regression tests.
 - Version 2.11.36-themes.6, code 211042; same package and signing certificate.
+
+## Version 7 — 2026-10-31
+
+- Added persistent background image fitting choices: Fit (show all, preserve aspect ratio), Fill (center crop), Stretch (fill without preserving aspect ratio).
+- Defaults to Fit for new and existing installations without a saved fitting preference, so stored wallpapers no longer silently lose their edges.
+- Existing private PNG files retain the full sampled image, so no reimport is needed. Unused screen areas use the page background color.
+- Restoring default background also restores Fit. Existing opacity controls, status styles and profile ordering are unchanged.
+- Version 2.11.36-themes.7, code 211043; same package and signing certificate.

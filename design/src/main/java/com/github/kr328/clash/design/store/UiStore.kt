@@ -15,6 +15,11 @@ class UiStore(context: Context) {
         context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE).asStoreProvider()
     )
     var profileOrder by store.string("profile_order", "")
+    var backgroundImageScale by store.enum(
+        key = "background_image_scale",
+        defaultValue = com.github.kr328.clash.design.model.BackgroundImageScale.Fit,
+        values = com.github.kr328.clash.design.model.BackgroundImageScale.values()
+    )
     var backgroundTheme by store.enum(
         key = "background_theme",
         defaultValue = com.github.kr328.clash.design.model.BackgroundTheme.Default,

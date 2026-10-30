@@ -69,6 +69,7 @@ class AppSettingsActivity : BaseActivity<AppSettingsDesign>(), Behavior {
                         AppSettingsDesign.Request.ResetBackground -> {
                             ThemeBackground.reset(this@AppSettingsActivity)
                             uiStore.backgroundTheme = BackgroundTheme.Default
+                            uiStore.backgroundImageScale = com.github.kr328.clash.design.model.BackgroundImageScale.Fit
                             uiStore.backgroundOpacityPercent = 85
                             recreateAll()
                         }

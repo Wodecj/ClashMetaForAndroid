@@ -8,10 +8,14 @@
     <string formatted="false" name="background_sunset">Sunset</string>
     <string formatted="false" name="background_custom">Custom image (choose below)</string>
     <string formatted="false" name="background_pick">Choose background image</string>
-    <string formatted="false" name="background_pick_summary">Stored locally only; up to 20 MiB; center cropped</string>
+    <string formatted="false" name="background_pick_summary">Stored locally only; up to 20 MiB; adjustable fit</string>
     <string formatted="false" name="background_opacity">Readability overlay</string>
     <string formatted="false" name="background_reset">Restore default and delete custom image</string>
     <string formatted="false" name="background_import_error">Cannot import image. Choose a valid image smaller than 20 MiB.</string>
     <string name="background_opacity_value">%1$d%%</string>
     <string formatted="false" name="background_opacity_hint">0%: no overlay · 100%: background fully covered</string>
+    <string name="background_image_scale">Background image fit</string>
+    <string name="background_scale_fit">Show entire image (no crop; may leave margins)</string>
+    <string name="background_scale_fill">Fill screen (crop edges)</string>
+    <string name="background_scale_stretch">Stretch to fill (may distort)</string>
 </resources>

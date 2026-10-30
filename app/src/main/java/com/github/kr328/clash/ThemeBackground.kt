@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.github.kr328.clash.design.model.BackgroundTheme
+import com.github.kr328.clash.design.model.BackgroundImageScale
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.util.resolveThemedColor
 import com.github.kr328.clash.design.util.backgroundSurfaceColor
@@ -133,7 +134,13 @@ internal object ThemeBackground {
     fun wrap(context: Context, content: View, store: UiStore): Pair<View, ImageView?> {
         if (store.backgroundTheme == BackgroundTheme.Default) return content to null
         val frame = FrameLayout(context)
-        val image = ImageView(context).apply { scaleType = ImageView.ScaleType.CENTER_CROP }
+        val image = ImageView(context).apply {
+            scaleType = when (store.backgroundImageScale) {
+                BackgroundImageScale.Fit -> ImageView.ScaleType.FIT_CENTER
+                BackgroundImageScale.Fill -> ImageView.ScaleType.CENTER_CROP
+                BackgroundImageScale.Stretch -> ImageView.ScaleType.FIT_XY
+            }
+        }
         val colors = when (store.backgroundTheme) {
             BackgroundTheme.Ocean -> intArrayOf(0xff1565c0.toInt(), 0xff80deea.toInt())
             BackgroundTheme.Forest -> intArrayOf(0xff1b5e20.toInt(), 0xffa5d6a7.toInt())

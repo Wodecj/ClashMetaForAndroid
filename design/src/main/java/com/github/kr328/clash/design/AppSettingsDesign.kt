@@ -65,6 +65,15 @@ class AppSettingsDesign(
             clickable(R.string.background_pick, summary = R.string.background_pick_summary) {
                 clicked { requests.trySend(Request.PickBackground) }
             }
+            selectableList(
+                value = uiStore::backgroundImageScale,
+                values = com.github.kr328.clash.design.model.BackgroundImageScale.values(),
+                valuesText = arrayOf(R.string.background_scale_fit, R.string.background_scale_fill,
+                    R.string.background_scale_stretch),
+                title = R.string.background_image_scale
+            ) {
+                listener = OnChangedListener { requests.trySend(Request.ReCreateAllActivities) }
+            }
             backgroundOpacitySlider(uiStore::backgroundOpacityPercent, onBackgroundOpacityPreview)
             clickable(R.string.background_reset) {
                 clicked { requests.trySend(Request.ResetBackground) }

@@ -8,10 +8,14 @@
     <string formatted="false" name="background_sunset">晚霞</string>
     <string formatted="false" name="background_custom">自选图片（请在下方选择）</string>
     <string formatted="false" name="background_pick">选择背景图片</string>
-    <string formatted="false" name="background_pick_summary">仅保存在本机；最大 20 MiB；居中裁剪</string>
+    <string formatted="false" name="background_pick_summary">仅保存在本机；最大 20 MiB；可调整显示方式</string>
     <string formatted="false" name="background_opacity">背景遮罩浓度</string>
     <string formatted="false" name="background_reset">恢复默认并删除自选图片</string>
     <string formatted="false" name="background_import_error">导入失败，请选择小于 20 MiB 的有效图片。</string>
     <string name="background_opacity_value">%1$d%%</string>
     <string formatted="false" name="background_opacity_hint">0%：无遮罩，显示原图；100%：完全遮住背景</string>
+    <string name="background_image_scale">背景图片显示方式</string>
+    <string name="background_scale_fit">完整显示（不裁剪，可能留边）</string>
+    <string name="background_scale_fill">裁剪铺满（可能裁掉边缘）</string>
+    <string name="background_scale_stretch">拉伸铺满（可能变形）</string>
 </resources>
