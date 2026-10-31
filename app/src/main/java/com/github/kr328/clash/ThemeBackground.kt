@@ -13,7 +13,6 @@ import android.net.Uri
 import android.util.AtomicFile
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.github.kr328.clash.design.model.BackgroundTheme
@@ -21,7 +20,6 @@ import com.github.kr328.clash.design.model.BackgroundImageScale
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.util.resolveThemedColor
 import com.github.kr328.clash.design.util.backgroundSurfaceColor
-import com.github.kr328.clash.design.util.backgroundTextShadow
 import com.github.kr328.clash.design.component.ProxyView
 import com.github.kr328.clash.design.view.ActivityBarLayout
 import com.github.kr328.clash.design.view.LargeActionCard
@@ -48,10 +46,6 @@ internal object ThemeBackground {
                     view.context.resolveThemedColor(android.R.attr.windowBackground), true, percent))
             }
             if (view is ProxyView) view.surfaceOpacityPercent = percent
-            if (view is TextView && enabled) {
-                view.setShadowLayer(if (percent < 50) view.resources.displayMetrics.density * 1.5f else 0f,
-                    0f, 0f, backgroundTextShadow(view.currentTextColor))
-            }
             if (view is ViewGroup) for (index in 0 until view.childCount) visit(view.getChildAt(index))
         }
         visit(content)

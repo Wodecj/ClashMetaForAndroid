@@ -23,7 +23,7 @@ class LargeActionCard @JvmOverloads constructor(
     private val store = UiStore(context)
     private var originalColor: Int? = null
     private var lastRenderedColor: Int? = null
-    private var lastStatusStyle: Pair<Int, Boolean>? = null
+    private var lastStatusColor: Int? = null
     var statusRunning: Boolean = false
         set(value) { field = value; refreshSurface(); invalidate() }
     var surfaceOpacityPercent: Int? = null
@@ -52,15 +52,10 @@ class LargeActionCard @JvmOverloads constructor(
         if (id != R.id.main_status_card) return
         val color = if (statusRunning) Color.WHITE
             else context.resolveThemedColor(com.google.android.material.R.attr.colorOnSurface)
-        val shadow = store.backgroundTheme != BackgroundTheme.Default &&
-            (surfaceOpacityPercent ?: store.backgroundOpacityPercent) < 50
-        val style = color to shadow
-        if (lastStatusStyle == style) return
-        lastStatusStyle = style
+        if (lastStatusColor == color) return
+        lastStatusColor = color
         for (label in listOf(binding.textView, binding.subtextView)) {
             label.setTextColor(color)
-            label.setShadowLayer(if (shadow) resources.displayMetrics.density * 1.5f else 0f,
-                0f, 0f, backgroundTextShadow(color))
         }
         binding.iconView.background?.let {
             val drawable = DrawableCompat.wrap(it).mutate()
@@ -93,7 +88,7 @@ class LargeActionCard @JvmOverloads constructor(
         get() = binding.iconView.background
         set(value) {
             binding.iconView.background = value
-            lastStatusStyle = null
+            lastStatusColor = null
             refreshStatusContent()
         }
 

@@ -81,3 +81,9 @@ Downloading is initiated only after the user selects Download update and opens i
 - Existing private PNG files retain the full sampled image, so no reimport is needed. Unused screen areas use the page background color.
 - Restoring default background also restores Fit. Existing opacity controls, status styles and profile ordering are unchanged.
 - Version 2.11.36-themes.7, code 211043; same package and signing certificate.
+
+## Version 8 — 2026-10-31
+
+- Removed wallpaper text contrast shadows from the shared page traversal, home status labels, profile rows and custom-drawn proxy node text, at every overlay concentration.
+- Removed the unused contrast-shadow color helper and status shadow tracking. Card elevation shadows retain their existing behavior.
+- Version 2.11.36-themes.8, code 211044; same package and signing certificate.

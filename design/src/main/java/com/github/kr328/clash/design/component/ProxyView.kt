@@ -11,7 +11,6 @@ import com.github.kr328.clash.common.compat.getDrawableCompat
 import com.github.kr328.clash.design.store.UiStore
 import com.github.kr328.clash.design.model.BackgroundTheme
 import com.github.kr328.clash.design.util.backgroundSurfaceColor
-import com.github.kr328.clash.design.util.backgroundTextShadow
 
 class ProxyView(
     context: Context,
@@ -175,11 +174,6 @@ class ProxyView(
         paint.textSize = state.config.textSize
         paint.isAntiAlias = true
         paint.color = state.controls
-        if (uiStore.backgroundTheme != BackgroundTheme.Default &&
-            (surfaceOpacityPercent ?: uiStore.backgroundOpacityPercent) < 50) {
-            paint.setShadowLayer(resources.displayMetrics.density * 1.5f, 0f, 0f,
-                backgroundTextShadow(state.controls))
-        }
 
         // draw delay
         canvas.apply {
